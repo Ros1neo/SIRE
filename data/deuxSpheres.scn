@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<scene>
+  <color name="background" value="0.0, 0.0, 0.0"/>
+
+ <!-- Use the flat color integrator -->
+ <integrator type="whitted">
+    <integer name="maxRecursion" value="3"/>
+ </integrator>
+
+ <!-- Render the scene as viewed by a perspective camera -->
+ <camera type="perspective">
+   <float name="fieldOfView" value="30.0" /> 
+   <integer name="width" value="600"/>
+   <integer name="height" value="400"/>
+   <integer name="samples" value="16"/>
+   <transform name="toWorld">
+      <lookat target="2, 0, 0.5"  origin="7, 0, 2" up="0, 0, 1"/>
+    </transform>
+ </camera>
+ 
+ <shape type="sphere">
+   <float name="radius" value="1"/>
+   <material type="diffuse">
+     <color name="diffuse" value="0,0,0" />
+     <color name="reflectivity" value="1.0,1.0,1.0"/>
+   </material>
+   <transform name="toWorld">
+     <translate value="0, -1.5, 0"/>
+   </transform>
+ </shape>
+
+ <shape type="sphere">
+   <float name="radius" value="1"/>
+   <material type="diffuse">
+     <color name="diffuse" value="0,0,0" />
+     <color name="reflectivity" value="1.0,1.0,1.0"/>
+   </material>
+   <transform name="toWorld">
+     <translate value="0, 1.5, 0"/>
+   </transform>
+ </shape>
+
+ <shape type="plane">
+   <material type="diffuse">
+     <color name="diffuse" value="0.75, 0.75, 0.75" />
+     <string name="texture" value="checkboard.exr" />
+     <integer name="mode" value="1" />
+     <float name="scale" value="1.0" />
+   </material>
+   <transform name="toWorld">
+     <rotate angle="45" axis="0,0,1"/>
+     <translate value="0, 0, -1"/>
+   </transform>
+ </shape>
+
+ <light type="directionalLight">
+   <vector name="direction" value="-1, 0, -1" />
+   <color name="intensity" value="1.2, 1.2, 1.2" />
+ </light>
+
+
+</scene>
