@@ -91,7 +91,8 @@ public:
     Ward(const PropertyList &propList);
 
     virtual Color3f brdf(const Vector3f& viewDir, const Vector3f& lightDir, const Normal3f& normal, const Vector2f& uv) const;
-    /*TODO TD3 3*///virtual Vector3f sample_IS(const Vector3f inDir, const Vector3f normal, float *pdf) const;
+    /*TODO TD3 3*/
+    virtual Vector3f sample_IS(const Vector3f inDir, const Vector3f normal, float *pdf) const;
 
     std::string toString() const;
 

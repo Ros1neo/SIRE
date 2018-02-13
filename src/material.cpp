@@ -77,7 +77,7 @@ Vector3f Diffuse::sample_IS(const Vector3f inDir, const Vector3f normal, float *
     double e2 = (double)rand()/RAND_MAX;
 
     double phi =  2. * M_PI * e1;
-    Vector3f X = inDir.cross(normal).normalized();
+    Vector3f X = (Vector3f(0,1.,0)-Vector3f(0,1.,0).dot(normal)*normal).normalized();
     Vector3f Y = normal.cross(X).normalized();
     double z = 1.-e2;
     double sin_theta = sqrt(e2*(2.-e2));

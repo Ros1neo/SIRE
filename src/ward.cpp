@@ -47,4 +47,26 @@ std::string Ward::toString() const
              m_alphaY);
 }
 
+Vector3f Ward::sample_IS(const Vector3f inDir, const Vector3f normal, float *pdf) const{
+    Vector3f i;
+    do{
+    double u = (double)rand()/RAND_MAX;
+    double v = (double)rand()/RAND_MAX;
+
+    double phi = atan2(m_alphaY*sin(2*M_PI*v),m_alphaX*cos(2*M_PI*v));
+    double theta = atan(sqrt(-log(u)/(cos(phi)*cos(phi)/m_alphaX/m_alphaX+sin(phi)*sin(phi)/m_alphaY/m_alphaY)));
+
+    Vector3f X = (Vector3f(0,1.,0)-Vector3f(0,1.,0).dot(normal)*normal).normalized();
+    Vector3f Y = normal.cross(X).normalized();
+
+    Vector3f h = (cos(phi)*sin(theta)*X+sin(phi)*sin(theta)*Y+cos(theta)*normal).normalized();
+
+    double denom = 1.0f/4/M_PI/m_alphaX/m_alphaY/h.dot(inDir)/cos(theta)/cos(theta)/cos(theta);
+    *pdf = denom*exp(-tan(theta)*tan(theta)*(cos(phi)*cos(phi)/m_alphaX/m_alphaX+sin(phi)*sin(phi)/m_alphaY/m_alphaY));
+    i = (2*h.dot(inDir)*h-inDir).normalized();
+
+    }while (i.dot(normal)<0);
+    return i;
+}
+
 REGISTER_CLASS(Ward, "ward")
