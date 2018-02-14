@@ -65,6 +65,7 @@ set(sire_SRCS
     src/DirectMats.cpp
     src/lightProbe.cpp
     src/areaLight.cpp
+    src/pathTracer.cpp
 )
 
 add_executable(sire_raytracer ${sire_SRCS})

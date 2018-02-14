@@ -59,14 +59,9 @@ public:
                     float pdfEchantillon;
                     Ray Echantillon(pos + hit.normal()*1e-4,material->sample_IS(-ray.direction,normal,&pdfEchantillon));
                     Echantillon.recursionLevel = ray.recursionLevel + 1;
-
                     float cos_term = std::max(0.f,Echantillon.direction.dot(normal));
-
                     Color3f brdf = material->brdf(-ray.direction,Echantillon.direction,normal, hit.texcoord());
-
-                    if(Echantillon.direction.dot(hit.normal())>0){ //Trouver d'ou viennent les rayons dans le mauvais sens pour supprimer cette condition chercher dans ward sampleIS
-                    radiance+=1.0f/m_samples*Li(scene,Echantillon) * cos_term * brdf / pdfEchantillon;}
-                }
+                    radiance+=1.0f/m_samples*Li(scene,Echantillon) * cos_term * brdf / pdfEchantillon;}  
             }
 
             // Reflexions
