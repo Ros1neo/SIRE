@@ -43,7 +43,8 @@ public:
 
                     /*TODO TD4 1.1*/
                     // But: calculer light_intensity
-
+                    Ray lightRay(pos,lightDir);
+                    light_intensity = light->intensity(pos,lightRay.at(dist));
 
 
                 }

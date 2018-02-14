@@ -25,15 +25,13 @@ AreaLight::AreaLight(const PropertyList &propList)
 
 Vector3f AreaLight::direction(const Point3f& x, float* dist = 0) const
 {
-
-
-
-    /*TODO TD4 1.1*/
-    // But: calculer light_intensity
-
-
-
-    return Vector3f();
+    Vector3f X = AreaLight::uVec();
+    Vector3f Y = AreaLight::vVec();
+    double u = (double)rand()/RAND_MAX-0.5;
+    double v = (double)rand()/RAND_MAX-0.5;
+    Vector3f direction = (m_position-x)+u*m_size*X+v*m_size*Y;
+    *dist = direction.norm();
+    return direction.normalized();
 }
 
 Color3f AreaLight::intensity(const Point3f& x) const
@@ -45,15 +43,21 @@ Color3f AreaLight::intensity(const Point3f& x) const
 
 Color3f AreaLight::intensity(const Point3f &x, const Point3f &y) const {
 
-
-
     /*TODO TD4 1.1*/
     // But: calculer l'intensité
-
+    Vector3f dir = x-y;
+    float d2 = dir.squaredNorm();
 
 
     if(m_texture){
+        float u = (y-m_position).dot(AreaLight::uVec())/m_size+0.5;
+        float v = (y-m_position).dot(AreaLight::vVec())/m_size+0.5;
+        const int i = int(floor(u * m_texture->cols()));
+        const int j = int(floor(v * m_texture->rows()));
 
+        Color3f fColor = (*m_texture)(j,i);
+
+        return std::max(0.f,dir.normalized().dot(direction())) *m_intensity* fColor / d2;
 
 
         /*TODO TD4 1.2*/
@@ -62,7 +66,7 @@ Color3f AreaLight::intensity(const Point3f &x, const Point3f &y) const {
 
 
     }
-    return Color3f();
+    return std::max(0.f,dir.normalized().dot(direction())) * m_intensity / d2;
 }
 
 void AreaLight::loadTexture(const std::string &filename) {
