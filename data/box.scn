@@ -12,7 +12,7 @@
    <float name="fieldOfView" value="90.0" /> 
    <integer name="width" value="512"/>
    <integer name="height" value="512"/>
-   <integer name="samples" value="100"/>
+   <integer name="samples" value="1"/>
    <transform name="toWorld">
      <lookat origin="1.2, -0.8, 1.2" target="0, 0, 0.1" up="0, 0, 1"/>
    </transform>
