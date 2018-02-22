@@ -57,11 +57,11 @@ public:
                 //But: intégrer l'équation du rendu au sens de Monte-Carlo pour m_samples échantillons
                 for(int i=0; i<m_samples; i++){
                     float pdfEchantillon;
-                    Ray Echantillon(pos + hit.normal()*1e-4,material->sample_IS(-ray.direction,normal,&pdfEchantillon));
-                    Echantillon.recursionLevel = ray.recursionLevel + 1;
-                    float cos_term = std::max(0.f,Echantillon.direction.dot(normal));
-                    Color3f brdf = material->brdf(-ray.direction,Echantillon.direction,normal, hit.texcoord());
-                    radiance+=1.0f/m_samples*Li(scene,Echantillon) * cos_term * brdf / pdfEchantillon;}  
+                    Ray Echantillon(pos + hit.normal()*1e-4,material->sample_IS(-ray.direction,normal,&pdfEchantillon)); // Rayon de stockage des coordonnées de Echantillon, le Rayon incident
+                    Echantillon.recursionLevel = ray.recursionLevel + 1; // sert à avoir une limite au nobre d'iterations
+                    float cos_term = std::max(0.f,Echantillon.direction.dot(normal)); // terme cosinus
+                    Color3f brdf = material->brdf(-ray.direction,Echantillon.direction,normal, hit.texcoord()); //BRDF entre le rayon incident et le rayon de sortie (= celui dont on part)
+                    radiance+=1.0f/m_samples*Li(scene,Echantillon) * cos_term * brdf / pdfEchantillon;}  //Equation du rendu, avec appel résursif de Li pour remonter aux sources/background
             }
 
             // Reflexions

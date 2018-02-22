@@ -275,15 +275,17 @@ void renderBlock(Scene* scene, ImageBlock& block)
             double dx,dy; // in [0,1] for one pixel
             for (int i=0;i<n_ligne;i++)
                 for (int j=0;j<n_ligne;j++){
-                    dx=(i+((n_ligne>1)?(double)rand()/RAND_MAX:0.5))/n_ligne;
-                    dy=(j+((n_ligne>1)?(double)rand()/RAND_MAX:0.5))/n_ligne;
-                    // ray direction
-                    ray.direction = (camF + camX * (2.0*float(x + dx + offset[0])/float(camera->vpWidth())  - 1.)
-                            - camY * (2.0*float(y + dy + offset[1])/float(camera->vpHeight()) - 1.)).normalized();
-                    // raytrace the ray
-                    color += integrator->Li(scene,ray);
+                        dx=(i+((n_ligne>1)?(double)rand()/RAND_MAX:0.5))/n_ligne;
+                        dy=(j+((n_ligne>1)?(double)rand()/RAND_MAX:0.5))/n_ligne;
+                        // ray direction
+                        ray.direction = (camF + camX * (2.0*float(x + dx + offset[0])/float(camera->vpWidth())  - 1.)
+                                - camY * (2.0*float(y + dy + offset[1])/float(camera->vpHeight()) - 1.)).normalized();
+                        // raytrace the ray
+                        //On lance 100 rayons au même endroit
+                        for (int k=0;k<100;k++)
+                            color += integrator->Li(scene,ray);
                 }
-            color /= n_ligne*n_ligne;
+            color /= n_ligne*n_ligne*100;//On moyenne par 100
 
             // draw image
             block.put(Vector2f(x+offset[0], y+offset[1]),color);

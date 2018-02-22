@@ -26,9 +26,8 @@ public:
         {
             Point3f pos = ray.at(hit.t());
             Normal3f normal = hit.normal();
-
             const Material* material = hit.shape()->material();
-
+            // Direct lights
             const LightList &lights = scene->lightList();
             for(LightList::const_iterator it=lights.begin(); it!=lights.end(); ++it)
             {
@@ -39,14 +38,10 @@ public:
                     // source étendue
                     const AreaLight* light =  dynamic_cast<const AreaLight*>(*it);
 
-
-
                     /*TODO TD4 1.1*/
                     // But: calculer light_intensity
                     Ray lightRay(pos,lightDir);
                     light_intensity = light->intensity(pos,lightRay.at(dist));
-
-
                 }
                 else{
                     // lampe ponctuelle ou directionnelle

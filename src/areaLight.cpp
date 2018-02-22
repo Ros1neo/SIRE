@@ -49,19 +49,20 @@ Color3f AreaLight::intensity(const Point3f &x, const Point3f &y) const {
     float d2 = dir.squaredNorm();
 
 
+    /*TODO TD4 1.2*/
+    // But: calculer l'intensité texturée
     if(m_texture){
-        float u = (y-m_position).dot(AreaLight::uVec())/m_size+0.5;
+        float u = (y-m_position).dot(AreaLight::uVec())/m_size+0.5; //On ramène les coordonnées d'impact de y dans le repère unitaire de la lampe : u,v E [0,1]²
         float v = (y-m_position).dot(AreaLight::vVec())/m_size+0.5;
-        const int i = int(floor(u * m_texture->cols()));
+
+        const int i = int(floor(u * m_texture->cols())); //On multiplie par le nombre de pixels de chaque dimension de la texture de la lampe pour récupérer l'index du pixel
         const int j = int(floor(v * m_texture->rows()));
 
-        Color3f fColor = (*m_texture)(j,i);
+        Color3f fColor = (*m_texture)(j,i); //Couleur de la texture
 
         return std::max(0.f,dir.normalized().dot(direction())) *m_intensity* fColor / d2;
 
 
-        /*TODO TD4 1.2*/
-        // But: calculer l'intensité texturée
 
 
 

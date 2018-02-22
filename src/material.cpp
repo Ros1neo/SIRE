@@ -73,17 +73,17 @@ Vector3f Diffuse::sample_IS(const Vector3f inDir, const Vector3f normal, float *
 {
     /*TODO TD3 2*/
     //But: tirer un échantillon aléatoire sur l'hémisphère orienté selon la normale
-    double e1 = (double)rand()/RAND_MAX;
+    double e1 = (double)rand()/RAND_MAX; //génère une direction aléatoire
     double e2 = (double)rand()/RAND_MAX;
 
     double phi =  2. * M_PI * e1;
-    Vector3f X = (Vector3f(0,1.,0)-Vector3f(0,1.,0).dot(normal)*normal).normalized();
+    Vector3f X = (Vector3f(0,1.,0)-Vector3f(0,1.,0).dot(normal)*normal).normalized(); //axes du repère orthonormal lié à la surface
     Vector3f Y = normal.cross(X).normalized();
-    double z = 1.-e2;
+    double z = 1.-e2; //x, y, z coordonnées dans le repère orthonormal X,Y,normal
     double sin_theta = sqrt(e2*(2.-e2));
     double x = cos(phi)*sin_theta;
     double y = sin(phi)*sin_theta;
-    *pdf = 1.0f/2.0f/M_PI;
+    *pdf = 1.0f/2.0f/M_PI; //pdf uniforme
     return (+x*X+y*Y+z*normal).normalized();
 }
 

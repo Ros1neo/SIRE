@@ -4,7 +4,7 @@
   <color name="background" value="0.2, 0.2, 0.2"/>
 
   <integrator type="path_mats">
-    <integer name="maxRecursion" value="2"/>
+    <integer name="maxRecursion" value="10"/>
     <boolean name="IS" value="true"/>
   </integrator>
 
@@ -12,7 +12,7 @@
    <float name="fieldOfView" value="90.0" /> 
    <integer name="width" value="512"/>
    <integer name="height" value="512"/>
-   <integer name="samples" value="20"/>
+   <integer name="samples" value="2"/>
    <transform name="toWorld">
      <lookat origin="1.2, -0.8, 1.2" target="0, 0, 0.1" up="0, 0, 1"/>
    </transform>

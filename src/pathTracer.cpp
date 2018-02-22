@@ -1,6 +1,7 @@
 #include "integrator.h"
 #include "scene.h"
 #include "material.h"
+#include "areaLight.h"
 
 class PathTracer : public Integrator
 {
@@ -30,12 +31,26 @@ public:
 
             const Material* material = hit.shape()->material();
 
-            // Direct Lights
+            // Direct lights (on a recopié l'implémentation de Whitted
             const LightList &lights = scene->lightList();
             for(LightList::const_iterator it=lights.begin(); it!=lights.end(); ++it)
             {
                 float dist;
                 Vector3f lightDir = (*it)->direction(pos, &dist);
+                Color3f light_intensity;
+                if(dynamic_cast<const AreaLight*>(*it)){
+                    // source étendue
+                    const AreaLight* light =  dynamic_cast<const AreaLight*>(*it);
+
+                    /*TODO TD4 1.1*/
+                    // But: calculer light_intensity
+                    Ray lightRay(pos,lightDir);
+                    light_intensity = light->intensity(pos,lightRay.at(dist));
+                }
+                else{
+                    // lampe ponctuelle ou directionnelle
+                    light_intensity = (*it)->intensity(pos);
+                }
                 Ray shadowRay(pos + normal*1e-4, lightDir,true);
                 Hit shadowHit;
                 scene->intersect(shadowRay,shadowHit);
@@ -48,13 +63,17 @@ public:
 
                 float cos_term = std::max(0.f,lightDir.dot(normal));
                 Color3f brdf = material->brdf(-ray.direction, lightDir, normal, hit.texcoord());
-                radiance += (*it)->intensity(pos) * cos_term * brdf * attenuation;
+                radiance += light_intensity * cos_term * brdf * attenuation;
             }
 
             // Env Lights
-            if (m_IS){
+            if (m_IS ){
+                double tirage = (double)rand()/RAND_MAX; //tirage de la roulette russe
+                float pAbs = material->ambientColor().getLuminance(); //probabilité de se faire absorber
+                if(tirage>pAbs && pAbs<1){ //Le rayon n'est pas absorbé
                 /*TODO TD3 2*/
                 //But: intégrer l'équation du rendu au sens de Monte-Carlo pour m_samples échantillons
+                    //On n'échantillonne plus 100 fois à chaque intersection. à la place, on tire 100 rayons sur le même point d'impact ce qui réduit le mon
                 float pdfEchantillon;
                 Ray Echantillon(pos + hit.normal()*1e-4,material->sample_IS(-ray.direction,normal,&pdfEchantillon));
                 Echantillon.recursionLevel = ray.recursionLevel + 1;
@@ -63,7 +82,8 @@ public:
 
                 Color3f brdf = material->brdf(-ray.direction,Echantillon.direction,normal, hit.texcoord());
 
-                radiance+=1.0f*Li(scene,Echantillon) * cos_term * brdf / pdfEchantillon;
+                radiance+=1.0f*Li(scene,Echantillon) * cos_term * brdf / pdfEchantillon/(1.0f-pAbs);//correction par pdfechantillon et roulette russe
+                }
             }
 
             // Reflexions
